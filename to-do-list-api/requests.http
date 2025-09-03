@@ -1,0 +1,313 @@
+### To-Do List API Testing Requests
+### Base URL: http://localhost:3000
+
+### ========================================
+### USER ENDPOINTS
+### ========================================
+
+### 1. User Registration
+POST {{baseUrl}}/api/users/register
+Content-Type: application/json
+
+{
+    "username": "testuser1",
+    "password": "TestPass123!",
+    "confirmedPassword": "TestPass123!"
+}
+
+### 2. User Registration - Another User
+POST {{baseUrl}}/api/users/register
+Content-Type: application/json
+
+{
+    "username": "testuser2",
+    "password": "TestPass456!",
+    "confirmedPassword": "TestPass456!"
+}
+
+### 3. User Login
+POST {{baseUrl}}/api/users/login
+Content-Type: application/json
+
+{
+    "username": "testuser1",
+    "password": "TestPass123!"
+}
+
+### 4. Get All Users
+GET {{baseUrl}}/api/users
+
+### 5. Get User by ID
+GET {{baseUrl}}/api/users/8
+
+### 6. Update User
+PUT {{baseUrl}}/api/users/8
+Content-Type: application/json
+
+{
+    "username": "updateduser1",
+    "password": "NewPass123!"
+}
+
+### 7. Delete User
+DELETE {{baseUrl}}/api/users/8
+
+### ========================================
+### TASK ENDPOINTS (Require Authentication)
+### ========================================
+
+### 8. Create Task
+POST {{baseUrl}}/api/tasks
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "title": "Complete Project Review",
+    "description": "Review the entire project codebase and provide feedback",
+    "status": "pending"
+}
+
+### 9. Create Another Task
+POST {{baseUrl}}/api/tasks
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "title": "Write Documentation",
+    "description": "Create comprehensive API documentation",
+    "status": "in_progress"
+}
+
+### 10. Create Third Task
+POST {{baseUrl}}/api/tasks
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "title": "Setup Testing",
+    "description": "Implement unit and integration tests",
+    "status": "pending"
+}
+
+### 11. Get All Tasks (for authenticated user)
+GET {{baseUrl}}/api/tasks
+Authorization: Bearer {{authToken}}
+
+### 12. Get Task by ID
+GET {{baseUrl}}/api/tasks/1
+Authorization: Bearer {{authToken}}
+
+### 13. Update Task
+PUT {{baseUrl}}/api/tasks/1
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "title": "Complete Project Review - Updated",
+    "description": "Review the entire project codebase and provide detailed feedback",
+    "status": "completed"
+}
+
+### 14. Update Task Status Only
+PUT {{baseUrl}}/api/tasks/2
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "status": "completed"
+}
+
+### 15. Update Task Title Only
+PUT {{baseUrl}}/api/tasks/3
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "title": "Setup Testing Framework"
+}
+
+### 16. Delete Task
+DELETE {{baseUrl}}/api/tasks/3
+Authorization: Bearer {{authToken}}
+
+### ========================================
+### ERROR TESTING SCENARIOS
+### ========================================
+
+### 17. Login with Wrong Password
+POST {{baseUrl}}/api/users/login
+Content-Type: application/json
+
+{
+    "username": "testuser1",
+    "password": "wrongpassword"
+}
+
+### 18. Login with Non-existent User
+POST {{baseUrl}}/api/users/login
+Content-Type: application/json
+
+{
+    "username": "nonexistentuser",
+    "password": "TestPass123!"
+}
+
+### 19. Create Task without Authentication
+POST {{baseUrl}}/api/tasks
+Content-Type: application/json
+
+{
+    "title": "Unauthorized Task",
+    "description": "This should fail"
+}
+
+### 20. Create Task with Invalid Status
+POST {{baseUrl}}/api/tasks
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "title": "Invalid Status Task",
+    "description": "Testing invalid status",
+    "status": "invalid_status"
+}
+
+### 21. Create Task with Short Title
+POST {{baseUrl}}/api/tasks
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "title": "ab",
+    "description": "Title too short"
+}
+
+### 22. Create Task with Long Title
+POST {{baseUrl}}/api/tasks
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "title": "This is a very long title that exceeds the maximum allowed length of one hundred characters and should trigger a validation error",
+    "description": "Title too long"
+}
+
+### 23. Create Duplicate Task Title (Same User)
+POST {{baseUrl}}/api/tasks
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "title": "Complete Project Review",
+    "description": "Duplicate title for same user"
+}
+
+### 24. Access Task from Different User
+GET {{baseUrl}}/api/tasks/1
+Authorization: Bearer {{otherUserToken}}
+
+### 25. Update Non-existent Task
+PUT {{baseUrl}}/api/tasks/999
+Authorization: Bearer {{authToken}}
+Content-Type: application/json
+
+{
+    "title": "Non-existent Task Update"
+}
+
+### 26. Delete Non-existent Task
+DELETE {{baseUrl}}/api/tasks/999
+Authorization: Bearer {{authToken}}
+
+### 27. Register User with Weak Password
+POST {{baseUrl}}/api/users/register
+Content-Type: application/json
+
+{
+    "username": "weakuser",
+    "password": "123",
+    "confirmedPassword": "123"
+}
+
+### 28. Register User with Mismatched Passwords
+POST {{baseUrl}}/api/users/register
+Content-Type: application/json
+
+{
+    "username": "mismatchuser",
+    "password": "TestPass123!",
+    "confirmedPassword": "DifferentPass123!"
+}
+
+### 29. Register User with Short Username
+POST {{baseUrl}}/api/users/register
+Content-Type: application/json
+
+{
+    "username": "ab",
+    "password": "TestPass123!",
+    "confirmedPassword": "TestPass123!"
+}
+
+### 30. Register User with Long Username
+POST {{baseUrl}}/api/users/register
+Content-Type: application/json
+
+{
+    "username": "thisusernameiswaytoolongandexceedsthelimit",
+    "password": "TestPass123!",
+    "confirmedPassword": "TestPass123!"
+}
+
+### ========================================
+### ROOT ENDPOINT
+### ========================================
+
+### 31. Root Endpoint
+GET {{baseUrl}}/
+
+### ========================================
+### ENVIRONMENT VARIABLES
+### ========================================
+
+@baseUrl = http://localhost:3000
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAsInVzZXJuYW1lIjoidGVzdHVzZXIxIiwiaWF0IjoxNzU2OTM5Nzg0fQ.6lZUmtggSSRUo--RA0HyLfjF0De1CDl8jTg2OIKbGQs
+@otherUserToken = OTHER_USER_JWT_TOKEN_HERE
+
+### ========================================
+### USAGE INSTRUCTIONS
+### ========================================
+
+### 1. Start your server: npm run dev
+### 2. Replace @authToken with the token received from login
+### 3. Run requests in sequence (some depend on previous ones)
+### 4. Use VS Code REST Client extension or similar tool
+### 5. Check responses for proper error handling and validation
+
+### ========================================
+### EXPECTED RESPONSES
+### ========================================
+
+### Success Responses:
+### - 200: Successful operations
+### - 201: Resource created (though your API returns 200)
+
+### Error Responses:
+### - 400: Validation errors, bad request
+### - 401: Unauthorized (missing/invalid token)
+### - 404: Resource not found
+### - 409: Conflict (duplicate username/task title)
+### - 500: Server errors
+
+### ========================================
+### TESTING FLOW
+### ========================================
+
+### 1. Test user registration
+### 2. Test user login and get token
+### 3. Test task creation with token
+### 4. Test task retrieval and updates
+### 5. Test error scenarios
+### 6. Test authentication requirements
+### 7. Test validation rules
+### 8. Test user management operations
