@@ -50,7 +50,6 @@ DB_PORT=3306
 
 # JWT Configuration
 JWT_SECRET=your_super_secret_jwt_key_here
-JWT_EXPIRES_IN=24h
 
 # Server Configuration
 PORT=3000
@@ -78,28 +77,27 @@ The API will be available at `http://localhost:3000`
 
 | Method | Endpoint | Description | Body |
 |--------|----------|-------------|------|
-| `POST` | `/auth/register` | User registration | `{ "username", "email", "password" }` |
-| `POST` | `/auth/login` | User login | `{ "email", "password" }` |
-| `GET` | `/auth/profile` | Get user profile | Requires JWT token |
+| `POST` | `/api/users/register` | User registration | `{ "username", "password" }` |
+| `POST` | `/api/users/login` | User login | `{ "username", "password" }` |
 
 ### Blog Posts
 
 | Method | Endpoint | Description | Body | Auth Required |
 |--------|----------|-------------|------|---------------|
-| `GET` | `/posts` | Get all posts | - | No |
-| `GET` | `/posts/:id` | Get post by ID | - | No |
-| `POST` | `/posts` | Create new post | `{ "title", "content" }` | Yes |
-| `PUT` | `/posts/:id` | Update post | `{ "title", "content" }` | Yes |
-| `DELETE` | `/posts/:id` | Delete post | - | Yes |
+| `GET` | `/api/posts` | Get all posts | - | No |
+| `GET` | `/api/posts/:id` | Get post by ID | - | No |
+| `POST` | `/api/posts` | Create new post | `{ "title", "content" }` | Yes |
+| `PUT` | `/api/posts/:id` | Update post | `{ "title", "content" }` | Yes |
+| `DELETE` | `/api/posts/:id` | Delete post | - | Yes |
 
 ### Users
 
 | Method | Endpoint | Description | Body | Auth Required |
 |--------|----------|-------------|------|---------------|
-| `GET` | `/users` | Get all users | - | Yes |
-| `GET` | `/users/:id` | Get user by ID | - | Yes |
-| `PUT` | `/users/:id` | Update user | `{ "username", "email" }` | Yes |
-| `DELETE` | `/users/:id` | Delete user | - | Yes |
+| `GET` | `/api/users` | Get all users | - | No |
+| `GET` | `/api/users/:id` | Get user by ID | - | No |
+| `PUT` | `/api/users/:id` | Update user | `{ "username", "password" }` | No |
+| `DELETE` | `/api/users/:id` | Delete user | - | No |
 
 ## 🔐 Authentication
 
@@ -111,8 +109,8 @@ Authorization: Bearer <your_jwt_token>
 
 ### Getting a Token
 
-1. Register a new user at `POST /auth/register`
-2. Login at `POST /auth/login` to receive a JWT token
+1. Register a new user at `POST /api/users/register`
+2. Login at `POST /api/users/login` to receive a JWT token
 3. Use the token in subsequent requests
 
 ## 📁 Project Structure
@@ -162,28 +160,27 @@ npm test
 
 ### Register a new user
 ```bash
-curl -X POST http://localhost:3000/auth/register \
+curl -X POST http://localhost:3000/api/users/register \
   -H "Content-Type: application/json" \
   -d '{
     "username": "john_doe",
-    "email": "john@example.com",
     "password": "securepassword123"
   }'
 ```
 
 ### Login
 ```bash
-curl -X POST http://localhost:3000/auth/login \
+curl -X POST http://localhost:3000/api/users/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "john@example.com",
+    "username": "john_doe",
     "password": "securepassword123"
   }'
 ```
 
 ### Create a blog post (with authentication)
 ```bash
-curl -X POST http://localhost:3000/posts \
+curl -X POST http://localhost:3000/api/posts \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <your_jwt_token>" \
   -d '{

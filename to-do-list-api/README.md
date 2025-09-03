@@ -45,15 +45,14 @@ npm install
    Create a `.env` file in the root directory:
 ```env
 # Database Configuration
-DB_HOST=localhost
-DB_USER=your_username
-DB_PASS=your_password
+DB_HOSTNAME=localhost
+DB_USERNAME=your_username
+DB_PASSWORD=your_password
 DB_NAME=todo_db
 DB_PORT=3306
 
 # JWT Configuration
-JWT_SECRET=your_super_secret_jwt_key_here
-JWT_EXPIRES_IN=24h
+JWT_KEY=your_super_secret_jwt_key_here
 
 # Server Configuration
 PORT=3001
@@ -81,29 +80,27 @@ The API will be available at `http://localhost:3001`
 
 | Method | Endpoint | Description | Body |
 |--------|----------|-------------|------|
-| `POST` | `/auth/register` | User registration | `{ "username", "email", "password" }` |
-| `POST` | `/auth/login` | User login | `{ "email", "password" }` |
-| `GET` | `/auth/profile` | Get user profile | Requires JWT token |
+| `POST` | `/api/users/register` | User registration | `{ "username", "password", "confirmedPassword" }` |
+| `POST` | `/api/users/login` | User login | `{ "username", "password" }` |
 
 ### Todo Items
 
 | Method | Endpoint | Description | Body | Auth Required |
 |--------|----------|-------------|------|---------------|
-| `GET` | `/todos` | Get all todos for user | - | Yes |
-| `GET` | `/todos/:id` | Get todo by ID | - | Yes |
-| `POST` | `/todos` | Create new todo | `{ "title", "description", "dueDate", "priority" }` | Yes |
-| `PUT` | `/todos/:id` | Update todo | `{ "title", "description", "dueDate", "priority", "completed" }` | Yes |
-| `DELETE` | `/todos/:id` | Delete todo | - | Yes |
-| `PATCH` | `/todos/:id/complete` | Mark todo as complete | - | Yes |
+| `GET` | `/api/tasks` | Get all tasks for user | - | Yes |
+| `GET` | `/api/tasks/:id` | Get task by ID | - | Yes |
+| `POST` | `/api/tasks` | Create new task | `{ "title", "description", "status" }` | Yes |
+| `PUT` | `/api/tasks/:id` | Update task | `{ "title", "description", "status" }` | Yes |
+| `DELETE` | `/api/tasks/:id` | Delete task | - | Yes |
 
 ### Users
 
 | Method | Endpoint | Description | Body | Auth Required |
 |--------|----------|-------------|------|---------------|
-| `GET` | `/users` | Get all users | - | Yes |
-| `GET` | `/users/:id` | Get user by ID | - | Yes |
-| `PUT` | `/users/:id` | Update user | `{ "username", "email" }` | Yes |
-| `DELETE` | `/users/:id` | Delete user | - | Yes |
+| `GET` | `/api/users` | Get all users | - | No |
+| `GET` | `/api/users/:id` | Get user by ID | - | No |
+| `PUT` | `/api/users/:id` | Update user | `{ "username", "password" }` | No |
+| `DELETE` | `/api/users/:id` | Delete user | - | No |
 
 ## 🔐 Authentication
 
@@ -115,8 +112,8 @@ Authorization: Bearer <your_jwt_token>
 
 ### Getting a Token
 
-1. Register a new user at `POST /auth/register`
-2. Login at `POST /auth/login` to receive a JWT token
+1. Register a new user at `POST /api/users/register`
+2. Login at `POST /api/users/login` to receive a JWT token
 3. Use the token in subsequent requests
 
 ## 📁 Project Structure
@@ -152,13 +149,13 @@ npm run lint:fix   # Fix ESLint issues automatically
 
 The API automatically creates the following tables:
 
-- **Users**: `id`, `username`, `email`, `password`, `createdAt`, `updatedAt`
-- **Todos**: `id`, `title`, `description`, `dueDate`, `priority`, `completed`, `userId`, `createdAt`, `updatedAt`
+- **Users**: `id`, `username`, `password`, `createdAt`, `updatedAt`
+- **Tasks**: `id`, `title`, `description`, `status`, `userId`, `createdAt`, `updatedAt`
 
-### Todo Priority Levels
-- `low`: Low priority tasks
-- `medium`: Medium priority tasks  
-- `high`: High priority tasks
+### Task Status Options
+- `pending`: Task is waiting to be started
+- `in_progress`: Task is currently being worked on
+- `completed`: Task has been finished
 
 ## 🔒 Security Features
 
@@ -189,42 +186,45 @@ npm test
 
 ### Register a new user
 ```bash
-curl -X POST http://localhost:3001/auth/register \
+curl -X POST http://localhost:3001/api/users/register \
   -H "Content-Type: application/json" \
   -d '{
     "username": "jane_doe",
-    "email": "jane@example.com",
-    "password": "SecurePass123!"
+    "password": "SecurePass123!",
+    "confirmedPassword": "SecurePass123!"
   }'
 ```
 
 ### Login
 ```bash
-curl -X POST http://localhost:3001/auth/login \
+curl -X POST http://localhost:3001/api/users/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "jane@example.com",
+    "username": "jane_doe",
     "password": "SecurePass123!"
   }'
 ```
 
-### Create a todo item (with authentication)
+### Create a task (with authentication)
 ```bash
-curl -X POST http://localhost:3001/todos \
+curl -X POST http://localhost:3001/api/tasks \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <your_jwt_token>" \
   -d '{
     "title": "Complete project documentation",
     "description": "Write comprehensive README and API docs",
-    "dueDate": "2024-01-15",
-    "priority": "high"
+    "status": "pending"
   }'
 ```
 
-### Mark todo as complete
+### Update task status
 ```bash
-curl -X PATCH http://localhost:3001/todos/1/complete \
-  -H "Authorization: Bearer <your_jwt_token>"
+curl -X PUT http://localhost:3001/api/tasks/1 \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <your_jwt_token>" \
+  -d '{
+    "status": "completed"
+  }'
 ```
 
 ## 📋 Request Examples

@@ -89,6 +89,10 @@ A blog management system with the following features:
 - JWT authentication
 - CORS support
 
+**API Endpoints**:
+- User management: `/api/users`
+- Blog posts: `/api/posts`
+
 ### to-do-list-api
 
 A task management system with the following features:
@@ -107,6 +111,10 @@ A task management system with the following features:
 - JWT authentication
 - Joi validation
 - CORS support
+
+**API Endpoints**:
+- User management: `/api/users`
+- Task management: `/api/tasks`
 
 ## 🛠️ Development
 
@@ -153,9 +161,8 @@ NODE_ENV=development
 
 Both APIs use JWT authentication with the following endpoints:
 
-- `POST /auth/register` - User registration
-- `POST /auth/login` - User login
-- `GET /auth/profile` - Get user profile (protected)
+- `POST /api/users/register` - User registration
+- `POST /api/users/login` - User login
 
 ### Protected Routes
 
