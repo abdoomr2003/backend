@@ -1,0 +1,125 @@
+{
+    "info": {
+        "name": "Weather API Tests",
+        "description": "Collection for testing the Weather API Wrapper Service",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "Get Weather - New York",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/weather/New York",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "weather", "New York"]
+                }
+            }
+        },
+        {
+            "name": "Get Weather - London",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/weather/London",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "weather", "London"]
+                }
+            }
+        },
+        {
+            "name": "Get Weather - Coordinates",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/weather/40.7128,-74.0060",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "weather", "40.7128,-74.0060"]
+                }
+            }
+        },
+        {
+            "name": "Get Weather - Tokyo",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/weather/Tokyo",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "weather", "Tokyo"]
+                }
+            }
+        },
+        {
+            "name": "Get Weather - Postal Code",
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/weather/10001",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "weather", "10001"]
+                }
+            }
+        },
+        {
+            "name": "Test Cache - First Call",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('First call should not be cached', function () {",
+                            "    const jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.cached).to.be.false;",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/weather/TestCity",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "weather", "TestCity"]
+                }
+            }
+        },
+        {
+            "name": "Test Cache - Second Call",
+            "event": [
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [
+                            "pm.test('Second call should be cached', function () {",
+                            "    const jsonData = pm.response.json();",
+                            "    pm.expect(jsonData.cached).to.be.true;",
+                            "});"
+                        ]
+                    }
+                }
+            ],
+            "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                    "raw": "{{baseUrl}}/api/v1/weather/TestCity",
+                    "host": ["{{baseUrl}}"],
+                    "path": ["api", "v1", "weather", "TestCity"]
+                }
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "http://localhost:3000"
+        }
+    ]
+}
